@@ -69,13 +69,13 @@ and sends the message through Sara's socket.
 The client uses the following format for private messages:
 
 ```text
-receiver:message
+message
 ```
 
 Example:
 
 ```text
-Sara:Hello! How are you?
+Hello! How are you?
 ```
 
 The server separates the receiver and message:
@@ -159,6 +159,24 @@ target.output.writeUTF(message);
 
 Only Sara receives the message.
 
+If during the conversation the client wants to chat with 
+other friend, the client can use the following command:
+
+```text
+/switch
+```
+
+implemented by the following code:
+
+```java
+// switch to another user to chat
+// without restarting program
+if(message.equals("/switch")){
+    getTargetName(output);
+}
+```
+
+
 ## Project Structure
 
 ```text
@@ -205,54 +223,43 @@ Client 1 → Ali
 Client 2 → Sara
 ```
 
-### 3. Send a Private Message
+### 3. Enter the client user name
 
 From Ali's client:
 
 ```text
-Sara:Hello Sara!
+ALi
 ```
 
-Sara will receive:
+From Sara's client:
 
 ```text
-Ali: Hello Sara!
-```
-
-## Example
-
-Two users are connected:
-
-```text
-Ali
 Sara
 ```
 
-Ali sends:
+### 4. Who do you want to chat with (Enter the user name)
+
+If Ali wants to chat with Sara:
 
 ```text
-Sara:Hey! How are you?
+Sara
 ```
 
-The server routes the message to Sara.
-
-Sara receives:
+If Sara wants to chat with Ali:
 
 ```text
-Ali: Hey! How are you?
+Ali
 ```
 
-If Ali sends:
+### 5. Send Message
+
+Ali writes to Sara:
 
 ```text
-John:Hello!
+Hello Sara i am Ali
 ```
 
-and John is not connected, the server responds:
 
-```text
-User 'John' is not online.
-```
 
 ## Concepts Learned
 
@@ -275,7 +282,7 @@ This project helped me practice several important Java and computer networking c
 
 Possible improvements for future versions include:
 
-* [ ] Graphical user interface using JavaFX
+* [ ] Graphical user interface using Swing
 * [ ] User authentication
 * [ ] Password-based login
 * [ ] Online users list
@@ -296,6 +303,6 @@ Instead of using a high-level framework, I implemented the communication using J
 
 ## Author
 
-**Sayed Ashtar Reza**
+**Sayed Ashtar Reza Entezar**
 
 This project was created as part of my journey to improve my Java, networking, and backend development skills.

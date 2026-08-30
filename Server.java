@@ -27,7 +27,7 @@ public class Main {
                                 + socket.getInetAddress().getHostAddress()
                 );
 
-                new HandleClient(socket).start();
+                new org.example.Main.HandleClient(socket).start();
             }
 
         } catch (IOException e) {
@@ -44,7 +44,7 @@ public class Main {
         private final DataOutputStream output;
 
         private String userName;
-
+        private String receiver;
 
         /*
          * username -> HandleClient
@@ -54,9 +54,9 @@ public class Main {
          * "Ali"  -> HandleClient(Ali)
          * "Sara" -> HandleClient(Sara)
          */
-        private static final Map<String, HandleClient> clients =
-                Collections.synchronizedMap(new HashMap<>());
 
+        private static final Map<String, org.example.Main.HandleClient> clients =
+                Collections.synchronizedMap(new HashMap<>());
 
         public HandleClient(Socket socket) throws IOException {
 
@@ -84,7 +84,7 @@ public class Main {
                  * must be its username.
                  */
                 userName = input.readUTF();
-
+                receiver = input.readUTF();
 
                 /*
                  * Check whether username already exists.
@@ -105,7 +105,6 @@ public class Main {
                     clients.put(userName, this);
                 }
 
-
                 System.out.println(
                         "Client connected: " + userName
                                 + " - "
@@ -113,47 +112,20 @@ public class Main {
                                 .getHostAddress()
                 );
 
-
                 /*
                  * Continuously receive messages.
                  */
                 while (true) {
 
-                    String msg = input.readUTF();
-
-                    /*
-                     * Expected format:
-                     *
-                     * Receiver:Message
-                     *
-                     * Example:
-                     *
-                     * Sara:Hello Sara!
-                     */
-                    String[] parts =
-                            msg.split(":", 2);
-
+                    String message = input.readUTF();
 
                     /*
                      * Check message format.
                      */
-                    if (parts.length != 2) {
-
-                        output.writeUTF(
-                                "Invalid format. Use: username:message"
-                        );
-
-                        output.flush();
-
+                    if (message.isEmpty()) {
                         continue;
                     }
 
-
-                    String receiver =
-                            parts[0].trim();
-
-                    String message =
-                            parts[1].trim();
 
 
                     /*
@@ -170,7 +142,6 @@ public class Main {
 
                         continue;
                     }
-
 
                     /*
                      * Send private message.
@@ -207,7 +178,6 @@ public class Main {
                     );
                 }
 
-
                 /*
                  * Close socket.
                  */
@@ -219,13 +189,9 @@ public class Main {
         }
 
 
-        private void sendPrivateMessage(
-                String receiver,
-                String message
-        ) {
+        private void sendPrivateMessage(String receiver, String message) {
 
-            HandleClient target;
-
+            org.example.Main.HandleClient target;
 
             /*
              * Find the receiver.
@@ -257,7 +223,6 @@ public class Main {
                 return;
             }
 
-
             /*
              * Send message only to target.
              */
@@ -269,16 +234,6 @@ public class Main {
 
                 target.output.flush();
 
-
-                /*
-                 * Optional confirmation to sender.
-                 */
-                output.writeUTF(
-                        "You -> " + receiver
-                                + ": " + message
-                );
-
-                output.flush();
 
             } catch (IOException e) {
 
